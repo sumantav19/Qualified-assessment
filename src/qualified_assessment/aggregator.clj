@@ -19,16 +19,16 @@
 
 (defn- datapoint-amount-bracket-per-hour
   [event]
-  {:pre [(and (not (nil? (:date event)))
-              (not (nil? (:amount event))))]}
+  {:pre [(and (string? (:date event))
+              (number? (:amount event)))]}
   (str (string/replace (:date event) #"^(.+)T(\d+):.+$" "$1:$2") "|"
        (->amount-bracket event)))
 
 (defn- datapoint-amount-bracket-n-payment-method-per-hour
   [event]
-  {:pre [(and (not (nil? (:date event)))
-              (not (nil? (:amount event)))
-              (not (nil? (:payment-method event))))]}
+  {:pre [(and (string? (:date event))
+              (number? (:amount event))
+              (string? (:payment-method event)))]}
   (str (string/replace (:date event) #"^(.+)T(\d+):.+$" "$1:$2") "|"
        (->amount-bracket event) "|"
        (:payment-method event)))
@@ -36,24 +36,24 @@
 (defn- datapoint-amount-bracket-for-payment-method
   [event]
   (:pre [(and
-          (not (nil? (:amoount event)))
-          (not (nil? (:payment-method event))))])
+          (number? (:amoount event))
+          (string? (:payment-method event)))])
   (str (->amount-bracket event) "|"
        (:payment-method event)))
 
 (defn- datapoint-merchant-payment-per-day
   [event]
   {:pre [(and
-          (not (nil? (:date event)))
-          (not (nil? (:merchant-id event) )))]}
+          (string? (:date event))
+          (string? (:merchant-id event) ))]}
   (str (string/replace (:date event) #"T.+$" "") "|"
        (:merchant-id event)))
 
 (defn- datapoint-merchant-payment-per-payment-method
   [event]
   {:pre [(and
-          (not (nil? (:merchant-id event)))
-          (not (nil? (:payment-method event))))]}
+          (string? (:merchant-id event))
+          (string? (:payment-method event)))]}
   (str (:merchant-id event) "|"
        (:payment-method event)))
 

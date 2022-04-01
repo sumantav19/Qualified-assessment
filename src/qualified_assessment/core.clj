@@ -9,13 +9,12 @@
         "Vegan Delite: strawberry, passion fruit, pineapple, mango, peach, ice, soy milk"
         "Just Desserts: banana, ice cream, chocolate, peanut, cherry"))
 
+(def smoothies->ingredients (->> smoothie-ingredients
+                                 (map #(string/split % #":"))
+                                 (into {})))
+
 (defn find-ingredients [smoothie-ordered]
-  (reduce (fn [_ smoothie-ingredient]
-            (let [[smoothie-name ingredients] (-> smoothie-ingredient
-                                                  (string/split #":"))]
-              (when (= smoothie-ordered smoothie-name)
-                (reduced ingredients))))
-          nil smoothie-ingredients))
+  (get smoothies->ingredients smoothie-ordered))
 
 (defn remove-allergies
   [ingredients allergies-set]
@@ -25,7 +24,7 @@
 
 (defn get-ingredients
   [order]
-  (let [[smoothie-name & rest-order]           (string/split order #",")
+  (let [[smoothie-name & rest-order]     (string/split order #",")
         ingredients                      (find-ingredients smoothie-name)]
     (when ingredients
       (let [allergies                        (into #{}
